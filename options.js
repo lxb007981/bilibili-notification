@@ -11,7 +11,7 @@ function set() {
     let queryInterval = parseInt(queryIntervalNode.value.trim());
     let userIdList = userIdListNode.innerText.trim().split('\n').map(pair => (pair.split(':'))).map(([uid, nickname]) => {
         return {
-            uid: Number(uid),
+            uid,
             nickname
         }
     }

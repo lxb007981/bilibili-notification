@@ -2,27 +2,27 @@ const QUERY_INTERVAL = 10;
 const userIdList =
   [
     {
-      "uid": 672346917,
+      "uid": "672346917",
       "nickname": "ava",
     },
     {
-      "uid": 672353429,
+      "uid": "672353429",
       "nickname": "bella",
     },
     {
-      "uid": 351609538,
+      "uid": "351609538",
       "nickname": "carol",
     },
     {
-      "uid": 672328094,
+      "uid": "672328094",
       "nickname": "diana",
     },
     {
-      "uid": 672342685,
+      "uid": "672342685",
       "nickname": "eileen",
     },
     {
-      "uid": 703007996,
+      "uid": "703007996",
       "nickname": "A-SOUL_Official",
     }
   ];
@@ -150,7 +150,7 @@ async function sendNotification(dynamic_id, uname, type, timestamp, face) {
   chrome.notifications.create(`${dynamic_id}_${type}_${timestamp}`, {
     type: 'basic',
     iconUrl: face,
-    title: '成员新动态提醒',
+    title: '新动态提醒',
     message: message,
     priority: 1,
     silent: true,
