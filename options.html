@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bilibili推送提醒</title>
+    <link rel="stylesheet" href="options.css">
+</head>
+
+<body>
+    <div>
+        <label for="queryInterval">查询间隔时间（分钟）</label>
+        <input type="text" id="queryInterval" name="queryInterval" size="10">
+        <label for="userIdList">推送名单(每行一个用户，格式为uid:昵称):</label>
+        <span class="textarea" role="textbox" id="userIdList" contenteditable="plaintext-only"></span><br>
+        <button type="button" id="submitButton" class="button buttonSubmit">提交</button>
+        <button type="button" id="clearButton" class="button buttonClear">清除</button>
+    </div>
+    <div id=response></div>
+</body>
+<script src="options.js"></script>
+
+</html>
