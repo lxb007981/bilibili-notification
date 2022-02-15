@@ -60,7 +60,7 @@ class DynamicCard {
       }
     })()
   ]);
-  chrome.storage.onChanged.addListener(async ({queryInterval}) => {
+  chrome.storage.onChanged.addListener(async ({ queryInterval }) => {
     if (queryInterval) {
       console.log("query interval changed, reset alarm");
       const queryAlarm = await chrome.alarms.get("queryDynamic");
@@ -174,14 +174,16 @@ async function updateDynamic() {
   for (const [uid, dynamicCards] of userQueries) {
     if (uid in oldQueries) {
       let newDynamicFlag = false;
-      const dynamic_ids_set = new Set(oldQueries[uid]);
+      const old_dynamic_ids_set = new Set(oldQueries[uid]);
       for (const card of dynamicCards) {
         const dynamicId = card.dynamicId;
-        if (!dynamic_ids_set.has(dynamicId)) {
+        if (!old_dynamic_ids_set.has(dynamicId)) {
           // new dynamic
           console.log("new dynamic");
           newDynamicFlag = true;
-          sendNotification(dynamicId, card.uname, card.type, card.timestamp, card.face);
+          if (old_dynamic_ids_set.length > 0) {
+            sendNotification(dynamicId, card.uname, card.type, card.timestamp, card.face);
+          }
         }
       }
       if (newDynamicFlag) {
@@ -192,7 +194,7 @@ async function updateDynamic() {
     else {
       //uid not in oldQueries
       console.log('new uid');
-      oldQueries[uid] =  dynamicCards.map((card) => card.dynamicId);
+      oldQueries[uid] = dynamicCards.map((card) => card.dynamicId);
       chrome.storage.local.set({ oldQueries });
     }
   }
