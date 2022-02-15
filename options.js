@@ -11,7 +11,7 @@ function set() {
     let queryInterval = parseInt(queryIntervalNode.value.trim());
     let userIdList = userIdListNode.innerText.trim().split('\n').map(pair => (pair.split(':'))).map(([uid, nickname]) => {
         return {
-            uid,
+            uid, // string
             nickname
         }
     }
@@ -20,6 +20,18 @@ function set() {
 
     chrome.storage.local.set({ queryInterval });
     chrome.storage.local.set({ userIdList });
+    updateOldQueries(userIdList);
+}
+
+async function updateOldQueries(userIdList) {
+    const { oldQueries } = await chrome.storage.local.get(["oldQueries"]);
+    const oldUIDs = Object.getOwnPropertyNames(oldQueries);
+    const newUIDSet = new Set(userIdList.map(userObj => userObj.uid))
+    const toBeDelete = new Set(oldUIDs.filter(x => !(newUIDSet.has(x))))
+    toBeDelete.forEach(function (uid) {
+        delete oldQueries[uid]
+    })
+    chrome.storage.local.set({ oldQueries });
 }
 
 function clearInput() {
