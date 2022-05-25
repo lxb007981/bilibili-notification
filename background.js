@@ -89,6 +89,9 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
 });
 
 async function queryDynamic(userIdList) {
+  /**
+   * Query dynamics of all uids
+   */
   console.log("query dynamics of:", userIdList.map(user => user.nickname).join(', '))
   let userQueries = new Map();
   for (const user of userIdList) {
@@ -113,6 +116,9 @@ async function queryDynamic(userIdList) {
 }
 
 async function queryUid(uid) {
+  /**
+   * Query a uid's dynamic
+   */
   const url = SPACE_HISTORY_PREFIX + uid;
   const response = await fetch(url, {
     method: 'GET', // *GET, POST, PUT, DELETE, etc.
@@ -173,21 +179,26 @@ async function updateDynamic() {
   }
   for (const [uid, dynamicCards] of userQueries) {
     if (uid in oldQueries) {
+      const latestOldQueryTimestamp = oldQueries[uid][0].timestamp
       let newDynamicFlag = false;
-      const old_dynamic_ids_set = new Set(oldQueries[uid]);
+      const old_dynamic_ids_set = new Set(oldQueries[uid].map(query => query.dynamicId));
       for (const card of dynamicCards) {
         const dynamicId = card.dynamicId;
+        if (card.timestamp <= latestOldQueryTimestamp) {
+          break // stop iteration when an old card is found
+        }
         if (!old_dynamic_ids_set.has(dynamicId)) {
-          // new dynamic
+          // potential new dynamic
           console.log("new dynamic");
           newDynamicFlag = true;
+
           if (old_dynamic_ids_set.length > 0) {
             sendNotification(dynamicId, card.uname, card.type, card.timestamp, card.face);
           }
         }
       }
       if (newDynamicFlag) {
-        oldQueries[uid] = dynamicCards.map(card => card.dynamicId);
+        oldQueries[uid] = dynamicCards.map(card => { dynamicId: card.dynamicId; timestamp: card.timestamp });
         chrome.storage.local.set({ oldQueries });
       }
     }
